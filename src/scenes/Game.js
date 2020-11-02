@@ -21,7 +21,7 @@ export default class Game extends Phaser.Scene {
     /* this.physics.add.staticImage(240, 320, "platform").setScale(0.5); */
 
     // create the group
-    let platforms = this.physics.add.staticGroup();
+    const platforms = this.physics.add.staticGroup();
 
     // then create 5 platforms from the group
     for (let i = 0; i < 5; ++i) {
@@ -38,6 +38,22 @@ export default class Game extends Phaser.Scene {
     }
 
     // create a bunny sprite
-    this.physics.add.sprite(240, 320, "bunny-stand").setScale(0.5);
+    this.player = this.physics.add
+      .sprite(240, 320, "bunny-stand")
+      .setScale(0.5);
+
+    this.physics.add.collider(platforms, this.player);
+
+    this.player.body.checkCollision.up = false;
+    this.player.body.checkCollision.left = false;
+    this.player.body.checkCollision.right = false;
+  }
+  update() {
+    // find out if the player's physics body is touching something below it
+    const touchingDown = this.player.body.touching.down;
+    if (touchingDown) {
+      // this makes the bunny jump straight up
+      this.player.setVelocityY(-300);
+    }
   }
 }
