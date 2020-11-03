@@ -17,15 +17,22 @@ export default class Game extends Phaser.Scene {
   constructor() {
     super("game");
   }
+  init() {
+    this.carrotsCollected = 0;
+  }
   preload() {
     //load the background image
     this.load.image("background", "assets/bg_layer1.png");
     // load the platform image
     this.load.image("platform", "assets/ground_grass.png");
-    // load character images
+    // load character base images
     this.load.image("bunny-stand", "assets/bunny1_stand.png");
-
+    //load item
     this.load.image("carrot", "assets/carrot.png");
+    // load character jump images
+    this.load.image("bunny-jump", "assets/bunny1_jump.png");
+    //load sfx for jump
+    this.load.audio("jump", "assets/sfx/phaseJump3.ogg");
 
     this.cursors = this.input.keyboard.createCursorKeys();
   }
@@ -101,6 +108,15 @@ export default class Game extends Phaser.Scene {
     if (touchingDown) {
       // this makes the bunny jump straight up
       this.player.setVelocityY(-300);
+      //change texture  when jumping
+      this.player.setTexture("bunny-jump");
+      //play sfx on jump
+      this.sound.play("jump");
+    }
+    //check if jumping
+    const vy = this.player.body.velocity.y;
+    if (vy > 0 && this.player.texture.key !== "bunny-stand") {
+      this.player.setTexture("bunny-stand");
     }
 
     this.platforms.children.iterate((child) => {
