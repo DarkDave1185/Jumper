@@ -2,12 +2,16 @@ import Phaser from "../library/phaser.js";
 import Carrot from "../game/Carrot.js";
 
 export default class Game extends Phaser.Scene {
+  //initial score variable count
+  carrotsCollected = 0;
   /** @type {Phaser.Physics.Arcade.StaticGroup} */
   platforms;
   /** @type {Phaser.Physics.Arcade.Sprite} */
   player;
   /** @type {Phaser.Physics.Arcade.Group} */
   carrots;
+  /** @type {Phaser.GameObjects.Text} */
+  carrotsCollectedText;
   /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */
   cursors;
   constructor() {
@@ -83,6 +87,13 @@ export default class Game extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
     // set the horizontal dead zone to 1.5x game width
     this.cameras.main.setDeadzone(this.scale.width * 1.5);
+
+    //display score
+    const style = { color: "#000", fontSize: 24 };
+    this.carrotsCollectedText = this.add
+      .text(240, 0, "Carrots: 0", style)
+      .setScrollFactor(0)
+      .setOrigin(0.5, 0);
   }
   update() {
     // find out if the player's physics body is touching something below it
@@ -168,5 +179,10 @@ export default class Game extends Phaser.Scene {
     this.carrots.killAndHide(carrot);
     //disable carrot
     this.physics.world.disableBody(carrot.body);
+    //increment score by 1
+    this.carrotsCollected++;
+    //update score displayed
+    const value = `Carrots: ${this.carrotsCollected}`;
+    this.carrotsCollectedText.text = value;
   }
 }
