@@ -59,14 +59,22 @@ export default class Game extends Phaser.Scene {
     this.carrots = this.physics.add.group({
       classType: Carrot,
     });
-    this.carrots.get(240, 320, "carrot");
+    //blocks carrot group
+    /* this.carrots.get(240, 320, "carrot"); */
     this.add.existing(this.carrots);
     //test carrot
     /* this.carrot.get(240, 320, "carrot"); */
-
+    //physics player and platform
     this.physics.add.collider(this.platforms, this.player);
-    //physics carrot
+    //physics carrot and platform
     this.physics.add.collider(this.platforms, this.carrots);
+    this.physics.add.overlap(
+      this.player,
+      this.carrots,
+      this.handleCollectCarrot,
+      undefined,
+      this
+    );
 
     this.player.body.checkCollision.up = false;
     this.player.body.checkCollision.left = false;
@@ -133,5 +141,32 @@ export default class Game extends Phaser.Scene {
     // update the physics body size
     carrot.body.setSize(carrot.width, carrot.height);
     return carrot;
+  }
+  /**
+   * @param {Phaser.GAme Object.Sprite} sprite
+   */
+  addCarrotAbove(sprite) {
+    const y = sprite.y - sprite.displayHeight;
+    /** @type {Phaser.Physics.Arcade.Sprite} */
+    const carrot = this.carrots.get(sprite.x, y, "carrot");
+    //make active and visible
+    carrot.setActive(true);
+    carrot.setVisible(true);
+
+    this.add.existing(carrot);
+    carrot.body.setSize(Carrot.width, carrot.height);
+    // make sure body is enabed
+    this.physics.world.enable(carrot);
+    return carrot;
+  }
+  /**
+   * @param {Phaser.Physics.Arcade.Sprite} player
+   * @param {Carrot} carrot
+   */
+  handleCollectCarrot(player, carrot) {
+    //hide carrot
+    this.carrots.killAndHide(carrot);
+    //disable carrot
+    this.physics.world.disableBody(carrot.body);
   }
 }
