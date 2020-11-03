@@ -2,12 +2,11 @@
 
 ### Table of Contents
 
-- [Description](#description)
-- [How To Use](#how-to-use)
-- [References](#references)
-- [Screenshot](#screenShot)
-- [Contributors](#contributors)
-- [Author Info](#author-info)
+- [Description](#Description)
+- [Technology](#Technologies)
+- [How To Use](#How-To-Use)
+- [References](#Reference)
+- [Screenshot](#ScreenShot)
 
 ---
 
